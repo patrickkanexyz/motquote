@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for file in ./img/new/*; do
+	[ -f "${file}" ] || continue
+	name="${file##*/}"
+	name="${name%%.*}"
+	convert "${file}" -resize 1080x1080^ ./img/bg/"${name}".png	
+	echo "${file##*/}"
+done
