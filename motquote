@@ -1,2 +1,17 @@
 #!/bin/sh
 # Create motivational images for Instagram
+
+while read -r QUOTE; do
+	echo "Generating overlay for: ${QUOTE}"
+	QUOTE_TITLE=$(echo "${QUOTE}" | tr " " "_" | tr -d ".")
+# 	echo "${QUOTE}"
+  	convert -background none \
+  		-fill white \
+  		-stroke black \
+  		-pointsize 100 \
+  		-font impact \
+  		-gravity center \
+  		-size 1080x1080 \
+  		caption:"${QUOTE}" \
+  		./img/overlays/"${QUOTE_TITLE}"_overlay.png
+done < "quotes"
