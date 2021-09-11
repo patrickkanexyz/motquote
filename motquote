@@ -1,10 +1,17 @@
-#!/bin/sh
+#!/usr/bin/bash
 # Create motivational images for Instagram
+
+random_array_element() {
+	local arr=("$@")
+	printf "%s\n" "${arr[RANDOM % $#]}"
+}
+
+# assign all files in the ./img/bg/ dir to array images
+images=(./img/bg/*)
 
 while read -r QUOTE; do
 	echo "Generating overlay for: ${QUOTE}"
 	QUOTE_TITLE=$(echo "${QUOTE}" | tr " " "_" | tr -d ".")
-# 	echo "${QUOTE}"
   	convert -background none \
   		-fill white \
   		-stroke black \
@@ -14,4 +21,16 @@ while read -r QUOTE; do
   		-size 1080x1080 \
   		caption:"${QUOTE}" \
   		./img/overlays/"${QUOTE_TITLE}"_overlay.png
+
+		# get a random background image
+		BG_IMAGE="${images[RANDOM % ${#images[@]}]}"
+		#echo "${BG_IMAGE}"
+		
+		# resize background images, don't just preresize them before use
+
+		# overlay quote onto background
+		convert -page +0+0 "${BG_IMAGE}" \
+			-page +0+0 ./img/overlays/"${QUOTE_TITLE}"_overlay.png \
+			-layers flatten ./img/quotes/"${QUOTE_TITLE}".png
+
 done < "quotes"
